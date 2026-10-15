@@ -8,6 +8,7 @@ using Serilog;
 using Serilog.Formatting.Compact;
 using Splitly.Api.Common;
 using Splitly.Api.Data;
+using Splitly.Api.Features.Activity;
 using Splitly.Api.Features.Balances;
 using Splitly.Api.Features.Expenses;
 using Splitly.Api.Features.Groups;
@@ -76,5 +77,6 @@ app.MapGroupEndpoints();
 app.MapExpenseEndpoints();
 app.MapBalanceEndpoints();
 app.MapSettlementEndpoints();
+app.MapActivityEndpoints();
 
 await app.RunAsync();
