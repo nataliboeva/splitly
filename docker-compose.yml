@@ -1,0 +1,44 @@
+# Local demo stack: `docker compose up --build`, then open http://localhost:8080
+name: splitly
+
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: splitly
+      POSTGRES_USER: splitly
+      POSTGRES_PASSWORD: splitly
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U splitly -d splitly"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: src/Splitly.Api/Dockerfile
+    environment:
+      # Development applies migrations, seeds the demo data and serves the Scalar API docs.
+      ASPNETCORE_ENVIRONMENT: Development
+      # GSS encryption is off because the slim runtime image has no Kerberos libraries to try it with.
+      ConnectionStrings__Splitly: Host=db;Port=5432;Database=splitly;Username=splitly;Password=splitly;GSS Encryption Mode=Disable
+    ports:
+      - "5080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  db-data:
