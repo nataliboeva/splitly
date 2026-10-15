@@ -11,6 +11,7 @@ internal sealed class GroupConfiguration : IEntityTypeConfiguration<Group>
     public void Configure(EntityTypeBuilder<Group> builder)
     {
         builder.HasKey(g => g.Id);
+        builder.Property(g => g.Id).ValueGeneratedNever();
         builder.Property(g => g.Name).HasMaxLength(Group.NameMaxLength);
         builder.Property(g => g.Currency)
             .HasConversion(currency => currency.Code, code => Currency.FromCode(code))

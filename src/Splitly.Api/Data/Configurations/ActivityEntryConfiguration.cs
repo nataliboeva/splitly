@@ -11,6 +11,7 @@ internal sealed class ActivityEntryConfiguration : IEntityTypeConfiguration<Acti
     public void Configure(EntityTypeBuilder<ActivityEntry> builder)
     {
         builder.HasKey(a => a.Id);
+        builder.Property(a => a.Id).ValueGeneratedNever();
         builder.Property(a => a.Type).HasConversion<string>().HasMaxLength(30);
         builder.Property(a => a.Message).HasMaxLength(500);
         builder.HasIndex(a => new { a.GroupId, a.CreatedAt });

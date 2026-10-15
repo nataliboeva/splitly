@@ -11,6 +11,7 @@ internal sealed class SettlementConfiguration : IEntityTypeConfiguration<Settlem
     public void Configure(EntityTypeBuilder<Settlement> builder)
     {
         builder.HasKey(s => s.Id);
+        builder.Property(s => s.Id).ValueGeneratedNever();
         builder.Property(s => s.Amount).HasPrecision(18, 2);
         builder.HasIndex(s => s.GroupId);
 

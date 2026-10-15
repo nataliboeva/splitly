@@ -224,7 +224,6 @@ namespace Splitly.Api.Data.Migrations
             modelBuilder.Entity("Splitly.Domain.Activity.ActivityEntry", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ActorId")
@@ -258,7 +257,6 @@ namespace Splitly.Api.Data.Migrations
             modelBuilder.Entity("Splitly.Domain.Expenses.Expense", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
@@ -307,7 +305,6 @@ namespace Splitly.Api.Data.Migrations
             modelBuilder.Entity("Splitly.Domain.Expenses.ExpenseShare", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
@@ -337,7 +334,6 @@ namespace Splitly.Api.Data.Migrations
             modelBuilder.Entity("Splitly.Domain.Groups.Group", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -384,7 +380,6 @@ namespace Splitly.Api.Data.Migrations
             modelBuilder.Entity("Splitly.Domain.Settlements.Settlement", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
