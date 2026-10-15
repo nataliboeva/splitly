@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Splitly.Api/Splitly.Api.csproj" />
     <Project Path="src/Splitly.Domain/Splitly.Domain.csproj" />
   </Folder>
   <Folder Name="/tests/">
