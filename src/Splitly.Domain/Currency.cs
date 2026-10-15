@@ -48,7 +48,7 @@ public sealed record Currency
     public bool TryToMinorUnits(decimal amount, out long minorUnits)
     {
         var scaled = amount * MinorUnitFactor;
-        if (scaled != decimal.Truncate(scaled))
+        if (scaled != decimal.Truncate(scaled) || scaled > long.MaxValue || scaled < long.MinValue)
         {
             minorUnits = 0;
             return false;
