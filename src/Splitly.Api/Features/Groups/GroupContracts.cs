@@ -8,7 +8,9 @@ public sealed record CreateGroupRequest(string Name, string Currency);
 
 public sealed record AddMemberRequest(string Email);
 
-public sealed record GroupSummaryResponse(Guid Id, string Name, string Currency, int MemberCount, DateTimeOffset CreatedAt);
+/// <param name="MyBalance">Positive when the group owes the signed-in user, negative when they owe the group.</param>
+public sealed record GroupSummaryResponse(
+    Guid Id, string Name, string Currency, int MemberCount, DateTimeOffset CreatedAt, decimal MyBalance);
 
 public sealed record GroupMemberResponse(Guid UserId, string DisplayName, string Email);
 

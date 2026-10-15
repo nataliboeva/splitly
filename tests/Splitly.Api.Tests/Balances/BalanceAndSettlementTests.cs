@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Splitly.Api.Features.Balances;
 using Splitly.Api.Features.Expenses;
+using Splitly.Api.Features.Groups;
 using Splitly.Api.Features.Settlements;
 using Splitly.Api.Tests.Infrastructure;
 using Splitly.Domain.Splits;
@@ -31,6 +32,20 @@ public class BalanceAndSettlementTests(SplitlyApiFactory factory) : ApiTestBase(
             new TransferResponse(boris.Id, ana.Id, 30m),
             new TransferResponse(vera.Id, ana.Id, 30m),
         ], ignoreOrder: true);
+    }
+
+    [Fact]
+    public async Task Group_list_shows_each_users_own_balance()
+    {
+        var (ana, boris, _, groupId) = await GroupWithDinnerPaidByAnaAsync();
+
+        var anaGroups = await ReadAsync<List<GroupSummaryResponse>>(
+            await ana.Client.GetAsync("/api/groups", Cancellation));
+        var borisGroups = await ReadAsync<List<GroupSummaryResponse>>(
+            await boris.Client.GetAsync("/api/groups", Cancellation));
+
+        anaGroups.Single(g => g.Id == groupId).MyBalance.ShouldBe(60m);
+        borisGroups.Single(g => g.Id == groupId).MyBalance.ShouldBe(-30m);
     }
 
     [Fact]

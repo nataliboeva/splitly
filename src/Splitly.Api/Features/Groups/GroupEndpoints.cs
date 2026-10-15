@@ -7,6 +7,7 @@ using Splitly.Api.Data;
 using Splitly.Api.Features.Users;
 using Splitly.Domain;
 using Splitly.Domain.Activity;
+using Splitly.Domain.Balances;
 using Splitly.Domain.Groups;
 
 namespace Splitly.Api.Features.Groups;
@@ -35,15 +36,38 @@ public static class GroupEndpoints
         ClaimsPrincipal principal, AppDbContext db, CancellationToken cancellationToken)
     {
         var userId = principal.GetUserId();
-        var rows = await db.Groups
+        var groups = await db.Groups
+            .AsNoTracking()
+            .Include(g => g.Members)
             .Where(g => g.Members.Any(m => m.UserId == userId))
             .OrderByDescending(g => g.CreatedAt)
-            .Select(g => new { g.Id, g.Name, g.Currency, MemberCount = g.Members.Count, g.CreatedAt })
             .ToListAsync(cancellationToken);
 
-        return TypedResults.Ok(rows
-            .Select(g => new GroupSummaryResponse(g.Id, g.Name, g.Currency.Code, g.MemberCount, g.CreatedAt))
-            .ToList());
+        // The user's balance in each group comes from the same domain calculation as the balances
+        // endpoint, so the overview and the group page can never disagree.
+        var groupIds = groups.Select(g => g.Id).ToList();
+        var expenses = await db.Expenses
+            .AsNoTracking()
+            .Include(e => e.Shares)
+            .Where(e => groupIds.Contains(e.GroupId))
+            .ToListAsync(cancellationToken);
+        var settlements = await db.Settlements
+            .AsNoTracking()
+            .Where(s => groupIds.Contains(s.GroupId))
+            .ToListAsync(cancellationToken);
+
+        var summaries = groups.Select(group =>
+        {
+            var balances = BalanceCalculator.Calculate(
+                group.Members.Select(m => m.UserId),
+                expenses.Where(e => e.GroupId == group.Id),
+                settlements.Where(s => s.GroupId == group.Id));
+
+            return new GroupSummaryResponse(
+                group.Id, group.Name, group.Currency.Code, group.Members.Count, group.CreatedAt, balances[userId]);
+        });
+
+        return TypedResults.Ok(summaries.ToList());
     }
 
     private static async Task<Created<GroupResponse>> CreateGroup(
