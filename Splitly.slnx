@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Splitly.Domain/Splitly.Domain.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Splitly.Domain.Tests/Splitly.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
