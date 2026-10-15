@@ -5,8 +5,8 @@ namespace Splitly.Api.Data;
 public static class DatabaseInitializer
 {
     /// <summary>
-    /// Applies pending migrations on startup. Only used in Development; a real deployment would run
-    /// migrations as a separate pipeline step instead of racing several app instances.
+    /// Applies pending migrations and seeds demo data. Only used in Development; a real deployment would run
+    /// migrations as a separate pipeline step instead of letting every app instance race to apply them.
     /// </summary>
     public static async Task InitializeDatabaseAsync(this WebApplication app)
     {
@@ -14,5 +14,6 @@ public static class DatabaseInitializer
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         await db.Database.MigrateAsync();
+        await scope.ServiceProvider.GetRequiredService<DemoDataSeeder>().SeedAsync();
     }
 }

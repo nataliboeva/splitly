@@ -55,6 +55,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
 builder.Services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddScoped<DemoDataSeeder>();
 
 var app = builder.Build();
 
