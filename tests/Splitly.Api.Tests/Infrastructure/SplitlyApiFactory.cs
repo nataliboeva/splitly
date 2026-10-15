@@ -41,6 +41,9 @@ public sealed class SplitlyApiFactory : WebApplicationFactory<Program>, IAsyncLi
     {
         builder.UseEnvironment("Testing");
         builder.UseSetting("ConnectionStrings:Splitly", _database?.GetConnectionString());
+
+        // Keep test output readable: only warnings and errors from the app.
+        builder.UseSetting("Serilog:MinimumLevel:Default", "Warning");
     }
 
     public override async ValueTask DisposeAsync()
