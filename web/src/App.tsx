@@ -10,7 +10,8 @@ import { GroupsPage } from './pages/GroupsPage';
 import { LoginPage } from './pages/LoginPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
-// Registration is loaded on demand, which keeps the first download small.
+// The group page (expense form, balances, activity) and registration are loaded on demand,
+// which keeps the first download small for people who only sign in and glance at their groups.
 const router = createBrowserRouter([
   {
     hydrateFallbackElement: <FullPageSpinner />,
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
             children: [
               { path: '/', element: <Navigate to="/groups" replace /> },
               { path: '/groups', element: <GroupsPage /> },
+              {
+                path: '/groups/:groupId',
+                lazy: async () => ({ Component: (await import('./pages/GroupPage')).GroupPage }),
+              },
             ],
           },
         ],
