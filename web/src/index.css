@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Components only use the semantic names below (bg-surface, text-muted, ...),
+ * so light and dark mode are handled entirely here by following the system preference.
+ */
+:root {
+  --bg: #fbfbfd;
+  --surface: #ffffff;
+  --surface-muted: #f5f4f9;
+  --border: #e7e5ef;
+  --fg: #17151f;
+  --muted: #6b6878;
+  --accent: #5b3fd1;
+  --accent-hover: #4c32b8;
+  --accent-fg: #ffffff;
+  --accent-soft: #f0ecfd;
+  --positive: #0f8a5f;
+  --negative: #c2410c;
+  --danger: #b42318;
+  --shadow: 0 1px 2px rgb(23 21 31 / 0.04), 0 2px 8px rgb(23 21 31 / 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0a10;
+    --surface: #13111a;
+    --surface-muted: #1a1724;
+    --border: #272432;
+    --fg: #ecebf2;
+    --muted: #9a97a8;
+    --accent: #a48bff;
+    --accent-hover: #b8a4ff;
+    --accent-fg: #0b0a10;
+    --accent-soft: #221c3a;
+    --positive: #4ade80;
+    --negative: #fb923c;
+    --danger: #f97066;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.2);
+  }
+}
+
+@theme inline {
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-danger: var(--danger);
+
+  --shadow-card: var(--shadow);
+}
+
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply bg-bg font-sans text-fg antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+  }
+}
