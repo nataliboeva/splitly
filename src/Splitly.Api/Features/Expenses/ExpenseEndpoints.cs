@@ -21,6 +21,7 @@ public static class ExpenseEndpoints
             .WithTags("Expenses");
 
         expenses.MapGet("/", ListExpenses);
+        expenses.MapGet("/{expenseId:guid}", GetExpense);
         expenses.MapPost("/", CreateExpense).WithValidation<ExpenseRequest>();
         expenses.MapPut("/{expenseId:guid}", UpdateExpense).WithValidation<ExpenseRequest>();
         expenses.MapDelete("/{expenseId:guid}", DeleteExpense);
@@ -40,6 +41,16 @@ public static class ExpenseEndpoints
             .ToListAsync(cancellationToken);
 
         return TypedResults.Ok(expenses.Select(ExpenseResponse.From).ToList());
+    }
+
+    private static async Task<Results<Ok<ExpenseResponse>, ProblemHttpResult>> GetExpense(
+        Guid groupId, Guid expenseId, AppDbContext db, CancellationToken cancellationToken)
+    {
+        var expense = await FindExpenseAsync(db, groupId, expenseId, cancellationToken);
+
+        return expense is null
+            ? ApiProblems.NotFound("Expense not found.")
+            : TypedResults.Ok(ExpenseResponse.From(expense));
     }
 
     private static async Task<Results<Created<ExpenseResponse>, ProblemHttpResult>> CreateExpense(

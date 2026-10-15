@@ -92,19 +92,21 @@ public class ExpenseEndpointsTests(SplitlyApiFactory factory) : ApiTestBase(fact
     public async Task The_creator_can_change_the_split()
     {
         var (ana, boris, vera, groupId) = await GroupOfThreeAsync();
-        var created = await CreateExpenseAsync(ana, groupId, Request(90m, ana.Id, SplitMethod.Equal, Split(ana), Split(boris), Split(vera)));
+        var original = Request(90m, ana.Id, SplitMethod.Equal, Split(ana), Split(boris), Split(vera));
+        var created = await CreateExpenseAsync(ana, groupId, original);
         var update = Request(90m, boris.Id, SplitMethod.Shares, Split(ana, 1m), Split(boris, 2m));
 
         var response = await ana.Client.PutAsJsonAsync(
             $"/api/groups/{groupId}/expenses/{created.Id}", update, Cancellation);
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var stored = (await ReadAsync<List<ExpenseResponse>>(
-            await ana.Client.GetAsync($"/api/groups/{groupId}/expenses", Cancellation))).ShouldHaveSingleItem();
+        var stored = await ReadAsync<ExpenseResponse>(
+            await ana.Client.GetAsync($"/api/groups/{groupId}/expenses/{created.Id}", Cancellation));
         stored.PaidById.ShouldBe(boris.Id);
         stored.SplitMethod.ShouldBe(SplitMethod.Shares);
         stored.UpdatedAt.ShouldNotBeNull();
-        stored.Shares.ToDictionary(s => s.UserId, s => (s.Amount, s.Value)).ShouldBe(new Dictionary<Guid, (decimal, decimal?)>
+        var shares = stored.Shares.ToDictionary(s => s.UserId, s => (s.Amount, s.Value));
+        shares.ShouldBe(new Dictionary<Guid, (decimal, decimal?)>
         {
             [ana.Id] = (30m, 1m),
             [boris.Id] = (60m, 2m),
