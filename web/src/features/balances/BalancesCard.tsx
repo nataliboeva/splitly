@@ -112,6 +112,7 @@ function SettleUp({
           <ul className="mt-3 space-y-2">
             {transfers.map((transfer) => {
               const from = nameOf(transfer.fromUserId);
+              const to = nameOf(transfer.toUserId);
               return (
                 <li
                   key={`${transfer.fromUserId}-${transfer.toUserId}`}
@@ -120,7 +121,7 @@ function SettleUp({
                   <div className="min-w-0 flex-1 text-sm">
                     <p className="truncate">
                       <span className="font-medium">{from}</span> {from === 'You' ? 'pay' : 'pays'}{' '}
-                      <span className="font-medium">{nameOf(transfer.toUserId)}</span>
+                      <span className="font-medium">{to === 'You' ? 'you' : to}</span>
                     </p>
                     <p className="font-mono text-sm tabular-nums">
                       {formatMoney(transfer.amount, currency)}

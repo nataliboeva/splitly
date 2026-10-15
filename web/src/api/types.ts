@@ -35,6 +35,8 @@ export interface GroupSummary {
   currency: string;
   memberCount: number;
   createdAt: string;
+  /** Positive when the group owes the signed-in user, negative when they owe the group. */
+  myBalance: number;
 }
 
 export interface GroupMember {

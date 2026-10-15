@@ -6,6 +6,7 @@ import { Alert } from '../components/ui/Alert';
 import { Button } from '../components/ui/Button';
 import { Card, EmptyState, Skeleton } from '../components/ui/Card';
 import { ArrowRightIcon, PlusIcon, UsersIcon } from '../components/ui/icons';
+import { MyBalancePill } from '../features/balances/MyBalancePill';
 import { CreateGroupDialog } from '../features/groups/CreateGroupDialog';
 import { formatDate } from '../lib/dates';
 
@@ -74,12 +75,13 @@ function GroupCard({ group }: { group: GroupSummary }) {
         </span>
       </div>
       <h2 className="mt-4 truncate font-semibold tracking-tight">{group.name}</h2>
-      <div className="mt-1 flex items-center justify-between text-sm text-muted">
-        <span>
-          {group.memberCount} {group.memberCount === 1 ? 'member' : 'members'} · since{' '}
-          {formatDate(group.createdAt.slice(0, 10))}
-        </span>
-        <ArrowRightIcon className="size-4 opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
+      <p className="mt-1 text-sm text-muted">
+        {group.memberCount} {group.memberCount === 1 ? 'member' : 'members'} · since{' '}
+        {formatDate(group.createdAt.slice(0, 10))}
+      </p>
+      <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
+        <MyBalancePill amount={group.myBalance} currency={group.currency} />
+        <ArrowRightIcon className="size-4 text-muted transition group-hover:translate-x-0.5 group-hover:text-accent" />
       </div>
     </Link>
   );

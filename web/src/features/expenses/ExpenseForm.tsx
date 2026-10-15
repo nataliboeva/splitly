@@ -244,7 +244,11 @@ export function ExpenseForm({
                   !participant.included && 'text-muted',
                 )}
               >
-                <Avatar id={participant.userId} name={name} size="sm" />
+                <Avatar
+                  id={participant.userId}
+                  name={members.find((m) => m.userId === participant.userId)?.displayName ?? name}
+                  size="sm"
+                />
                 <span className="truncate">{name}</span>
               </label>
               {splitMethod !== 'equal' && (

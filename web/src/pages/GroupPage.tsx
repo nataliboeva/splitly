@@ -12,13 +12,12 @@ import { ArrowLeftIcon, PlusIcon, ReceiptIcon, UsersIcon } from '../components/u
 import { Tabs } from '../components/ui/Tabs';
 import { ActivityFeed } from '../features/activity/ActivityFeed';
 import { BalancesCard } from '../features/balances/BalancesCard';
+import { MyBalancePill } from '../features/balances/MyBalancePill';
 import { RecordPaymentDialog } from '../features/balances/RecordPaymentDialog';
 import { DeleteExpenseDialog, ExpenseDialog } from '../features/expenses/ExpenseDialogs';
 import { ExpenseList } from '../features/expenses/ExpenseList';
 import { MembersCard } from '../features/groups/MembersCard';
 import { createNameLookup } from '../features/groups/people';
-import { cn } from '../lib/cn';
-import { formatMoney } from '../lib/money';
 
 type TabId = 'expenses' | 'activity';
 
@@ -198,28 +197,6 @@ function ExpensesPanel({
   }
 
   return <ExpenseList expenses={expenses.data} currency={group.currency} {...listProps} />;
-}
-
-function MyBalancePill({ amount, currency }: { amount: number; currency: string }) {
-  const text =
-    amount > 0
-      ? `You get back ${formatMoney(amount, currency)}`
-      : amount < 0
-        ? `You owe ${formatMoney(-amount, currency)}`
-        : 'You are settled up';
-
-  return (
-    <span
-      className={cn(
-        'rounded-full px-2.5 py-0.5 text-xs font-medium',
-        amount > 0 && 'bg-positive/10 text-positive',
-        amount < 0 && 'bg-negative/10 text-negative',
-        amount === 0 && 'bg-surface-muted text-muted',
-      )}
-    >
-      {text}
-    </span>
-  );
 }
 
 function GroupError({ error }: { error: Error }) {
