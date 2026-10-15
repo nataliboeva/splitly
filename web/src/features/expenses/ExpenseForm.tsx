@@ -230,7 +230,7 @@ export function ExpenseForm({
           const name = memberName(participant.userId);
           const share = preview.shares.get(participant.userId);
           return (
-            <li key={participant.userId} className="flex items-center gap-3 px-3 py-2.5">
+            <li key={participant.userId} className="flex items-center gap-2 px-3 py-2.5 sm:gap-3">
               <input
                 type="checkbox"
                 id={`include-${participant.userId}`}
@@ -244,15 +244,18 @@ export function ExpenseForm({
                   !participant.included && 'text-muted',
                 )}
               >
-                <Avatar
-                  id={participant.userId}
-                  name={members.find((m) => m.userId === participant.userId)?.displayName ?? name}
-                  size="sm"
-                />
+                {/* Phones need the room for the name more than the avatar. */}
+                <span className="hidden sm:block">
+                  <Avatar
+                    id={participant.userId}
+                    name={members.find((m) => m.userId === participant.userId)?.displayName ?? name}
+                    size="sm"
+                  />
+                </span>
                 <span className="truncate">{name}</span>
               </label>
               {splitMethod !== 'equal' && (
-                <div className="relative w-24 shrink-0">
+                <div className="relative w-20 shrink-0 sm:w-24">
                   <Input
                     inputMode="decimal"
                     aria-label={`${name}: ${splitMethodValueLabel(splitMethod)}`}
@@ -265,7 +268,7 @@ export function ExpenseForm({
                   </span>
                 </div>
               )}
-              <span className="w-20 shrink-0 text-right font-mono text-sm tabular-nums">
+              <span className="w-18 shrink-0 text-right font-mono text-sm tabular-nums sm:w-20">
                 {participant.included && share !== undefined ? (
                   formatMoney(share, currency.code)
                 ) : (
