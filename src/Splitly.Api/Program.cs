@@ -8,6 +8,7 @@ using Serilog;
 using Serilog.Formatting.Compact;
 using Splitly.Api.Common;
 using Splitly.Api.Data;
+using Splitly.Api.Features.Expenses;
 using Splitly.Api.Features.Groups;
 using Splitly.Api.Features.Users;
 
@@ -70,5 +71,6 @@ if (app.Environment.IsDevelopment())
 app.MapHealthChecks("/health");
 app.MapUserEndpoints();
 app.MapGroupEndpoints();
+app.MapExpenseEndpoints();
 
 await app.RunAsync();
