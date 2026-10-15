@@ -1,4 +1,4 @@
-using Splitly.Domain;
+using System.Globalization;
 
 namespace Splitly.Domain.Tests;
 
@@ -34,7 +34,7 @@ public class CurrencyTests
     {
         var currency = Currency.FromCode(code);
 
-        currency.TryToMinorUnits(decimal.Parse(amount, System.Globalization.CultureInfo.InvariantCulture), out var minor)
+        currency.TryToMinorUnits(decimal.Parse(amount, CultureInfo.InvariantCulture), out var minor)
             .ShouldBeTrue();
 
         minor.ShouldBe(expected);
@@ -47,7 +47,7 @@ public class CurrencyTests
     {
         var currency = Currency.FromCode(code);
 
-        currency.TryToMinorUnits(decimal.Parse(amount, System.Globalization.CultureInfo.InvariantCulture), out _)
+        currency.TryToMinorUnits(decimal.Parse(amount, CultureInfo.InvariantCulture), out _)
             .ShouldBeFalse();
     }
 
