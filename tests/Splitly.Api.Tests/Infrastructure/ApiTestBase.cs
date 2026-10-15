@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Splitly.Api.Features.Groups;
 using Splitly.Api.Features.Users;
 
 namespace Splitly.Api.Tests.Infrastructure;
@@ -57,6 +58,26 @@ public abstract class ApiTestBase(SplitlyApiFactory factory) : IAsyncLifetime
         var user = await ReadAsync<UserProfileResponse>(profile);
 
         return new TestUser(client, user.Id, email, displayName);
+    }
+
+    /// <summary>Creates a group owned by <paramref name="owner"/> and adds the other users as members.</summary>
+    protected static async Task<GroupResponse> CreateGroupAsync(TestUser owner, params TestUser[] members) =>
+        await CreateGroupAsync(owner, "EUR", members);
+
+    protected static async Task<GroupResponse> CreateGroupAsync(TestUser owner, string currency, params TestUser[] members)
+    {
+        var created = await owner.Client.PostAsJsonAsync(
+            "/api/groups", new CreateGroupRequest("Trip", currency), Cancellation);
+        var group = await ReadAsync<GroupResponse>(created);
+
+        foreach (var member in members)
+        {
+            var added = await owner.Client.PostAsJsonAsync(
+                $"/api/groups/{group.Id}/members", new AddMemberRequest(member.Email), Cancellation);
+            added.EnsureSuccessStatusCode();
+        }
+
+        return group;
     }
 
     protected static async Task<T> ReadAsync<T>(HttpResponseMessage response)
